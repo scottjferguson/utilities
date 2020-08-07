@@ -1,4 +1,5 @@
 ﻿using Core.Application;
+using Core.Plugins.Extensions;
 using Core.Plugins.Utilities;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -55,6 +56,7 @@ namespace Utilities
         {
             // Build configuration
             var config = new ConfigurationBuilder()
+                .SetBasePath(BasePath)
                 .AddJsonFile("local.settings.json", false)
                 .AddJsonFile("appsettings.json", true)
                 .AddJsonFile($"appsettings.{EnvironmentName}.json", true)
@@ -77,6 +79,7 @@ namespace Utilities
             Console.WriteLine($"Exception message: {e.Message}");
         }
 
+        private static string BasePath => AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("bin");
         private static string EnvironmentName => Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
     }
 }

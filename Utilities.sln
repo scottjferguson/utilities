@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.DatabaseProcessor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.FileProcessors", "src\Utilities.FileProcessors\Utilities.FileProcessors.csproj", "{48CE1E2E-B99B-44FE-8569-8118865FCE09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Domain", "src\Utilities.Domain\Utilities.Domain.csproj", "{B0807C22-9AA0-4543-B0C1-C401F564665A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{48CE1E2E-B99B-44FE-8569-8118865FCE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48CE1E2E-B99B-44FE-8569-8118865FCE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48CE1E2E-B99B-44FE-8569-8118865FCE09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0807C22-9AA0-4543-B0C1-C401F564665A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0807C22-9AA0-4543-B0C1-C401F564665A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0807C22-9AA0-4543-B0C1-C401F564665A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0807C22-9AA0-4543-B0C1-C401F564665A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

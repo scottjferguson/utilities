@@ -1,17 +1,18 @@
 ﻿using Core.Application;
 using Core.FileHandling;
+using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Utilities;
 using Core.Plugins.Utilities.FileHandling.Delimited;
 using Core.Plugins.Utilities.FileHandling.Excel;
+using Core.Providers;
 using FluentCommander.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using Core.Plugins.Microsoft.Azure.Wrappers;
-using Core.Providers;
 using Utilities.Common.Providers;
+using Utilities.Domain.Customer.Context;
 
 namespace Utilities
 {
@@ -36,6 +37,9 @@ namespace Utilities
 
             // Add the DatabaseCommander framework
             serviceCollection.AddSqlServerDatabaseCommander(_configuration);
+
+            // Add Entity Framework
+            serviceCollection.AddDbContext<UtilitiesCustomerContext>();
 
             // Add all Processors
             AddProcessors(serviceCollection);
