@@ -32,9 +32,9 @@ namespace Utilities.DatabaseProcessors.Customer
                 var customer = MapToEntity(customerModel);
 
                 await _dbContext.Customer.AddAsync(customer, cancellationToken);
-            }
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
         }
 
         private List<CustomerModel> GetCustomersToCreate()
@@ -45,7 +45,8 @@ namespace Utilities.DatabaseProcessors.Customer
                 new CustomerModel("Pradeep", "Tiwari", "pradeep@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77047"),
                 new CustomerModel("Andy", "Gregory", "andy@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77301"),
                 new CustomerModel("Ed", "Janson", "ed@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77001"),
-                new CustomerModel("Manicka", "Manikandan", "manicka.manikandan@publicissapient.com", "555-555-5555", "1 Main St.", "Arlington", "VA", "22201")
+                new CustomerModel("Manicka", "Manikandan", "manicka.manikandan@publicissapient.com", "555-555-5555", "1 Main St.", "Arlington", "VA", "22201"),
+                new CustomerModel("Test", "User", "test@test.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77001")
             };
         }
 
