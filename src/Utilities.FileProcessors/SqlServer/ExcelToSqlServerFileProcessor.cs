@@ -11,7 +11,7 @@ using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.SqlServer
 {
-    [Processor(Name = "ExcelToSQLServer")]
+    [Processor(Name = "ExcelToSqlServer")]
     public class ExcelToSqlServerFileProcessor : FileProcessorBase, IProcessor
     {
         private readonly IExcelFileHandler _excelFileHandler;

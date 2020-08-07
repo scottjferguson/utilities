@@ -1,17 +1,17 @@
 ﻿using Core.Application;
+using Core.FileHandling;
 using FluentCommander;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.FileHandling;
 using Utilities.Common;
 using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.SqlServer
 {
-    [Processor(Name = "CsvToSQLServer")]
+    [Processor(Name = "CsvToSqlServer")]
     public class CsvToSqlServerFileProcessor : FileProcessorBase, IProcessor
     {
         private readonly IDelimitedFileHandler _delimitedFileHandler;

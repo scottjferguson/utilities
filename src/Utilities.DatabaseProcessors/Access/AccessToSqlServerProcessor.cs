@@ -12,7 +12,7 @@ using Utilities.Common;
 
 namespace Utilities.DatabaseProcessors.Access
 {
-    [Processor(Name = "AccessToSQLServer")]
+    [Processor(Name = "AccessToSqlServer")]
     public class AccessToSqlServerProcessor : UtilitiesBase, IProcessor
     {
         private readonly IDatabaseCommander _databaseCommander;
