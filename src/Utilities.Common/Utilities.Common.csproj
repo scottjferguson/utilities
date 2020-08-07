@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentCommander" Version="1.0.120" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
+    <PackageReference Include="Relay.Core" Version="1.0.108" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
+  </ItemGroup>
+
+</Project>

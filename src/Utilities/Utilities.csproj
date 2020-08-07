@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentCommander" Version="1.0.120" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.6" />
+    <PackageReference Include="Relay.Core" Version="1.0.108" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities.Common\Utilities.Common.csproj" />
+    <ProjectReference Include="..\Utilities.DatabaseProcessors\Utilities.DatabaseProcessors.csproj" />
+    <ProjectReference Include="..\Utilities.FileProcessors\Utilities.FileProcessors.csproj" />
+  </ItemGroup>
+
+</Project>

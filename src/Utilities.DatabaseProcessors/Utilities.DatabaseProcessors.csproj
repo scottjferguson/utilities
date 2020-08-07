@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentCommander" Version="1.0.120" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
+    <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities.Common\Utilities.Common.csproj" />
+  </ItemGroup>
+
+</Project>

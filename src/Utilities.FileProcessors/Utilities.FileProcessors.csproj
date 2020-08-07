@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Files.Shares" Version="12.2.3" />
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="FluentCommander" Version="1.0.120" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
+    <PackageReference Include="FluentFTP" Version="32.4.3" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.1" />
+    <PackageReference Include="Relay.Core" Version="1.0.108" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
+    <PackageReference Include="SharpZipLib" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities.Common\Utilities.Common.csproj" />
+  </ItemGroup>
+
+</Project>
