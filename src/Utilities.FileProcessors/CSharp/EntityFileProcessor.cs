@@ -1,4 +1,5 @@
 ﻿using Core.Application;
+using Pluralize.NET.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,13 +14,17 @@ namespace Utilities.FileProcessors.CSharp
     [Processor(Name = "Entity")]
     public class EntityFileProcessor : FileProcessorBase, IProcessor
     {
+        // Settings:
         private const string DirectoryPath = @"C:\Users\scott\source\repos\guroo\Customer\Customer\src\Domain\";
+
+        private readonly Pluralizer _pluralizer;
         private readonly ConcurrentDictionary<string, string> _entityTypeNameDictionary;
         private readonly string _entityDirectory;
         private readonly string _contextDirectory;
 
-        public EntityFileProcessor()
+        public EntityFileProcessor(Pluralizer pluralizer)
         {
+            _pluralizer = pluralizer;
             _entityTypeNameDictionary = new ConcurrentDictionary<string, string>();
             _entityDirectory = Path.Combine(DirectoryPath, "Entities");
             _contextDirectory = Path.Combine(DirectoryPath, "Context");
@@ -98,26 +103,62 @@ namespace Utilities.FileProcessors.CSharp
                 string fileContent = await File.ReadAllTextAsync(fileInfo.FullName, cancellationToken);
                 string newFileContent = fileContent;
 
-                foreach (string fileLine in fileLines.Where(fl => fl.Contains("public virtual")))
+                foreach (string fileLine in fileLines)
                 {
-                    if (fileLine.Count(c => c == ' ') < 2)
+                    // If this line is initializing a collection...
+                    if (fileLine.Contains("new HashSet<"))
                     {
-                        Console.WriteLine($"Could not parse property type line for file line: {fileLine}");
-                        continue;
+                        // Parse the old values from the line
+                        string oldTypeName = fileLine.Trim().Split(" ")[0];
+
+                        if (!_entityTypeNameDictionary.TryGetValue(oldTypeName, out string newTypeName))
+                        {
+                            Console.WriteLine($"Could not update property type. Could not find matching type name reference in _entityTypeNameDictionary for type name {oldTypeName}");
+                            continue;
+                        }
+
+                        // Get the file line segments as an array
+                        string[] fileLineSegments = fileLine.Trim().Replace($"{oldTypeName}>", $"{newTypeName}>").Split(" ");
+
+                        // Create the new file line
+                        string newFileLine = $"{string.Empty.PadLeft(12)}{_pluralizer.Pluralize(fileLineSegments[0])} {string.Join(" ", fileLineSegments.Skip(1))}";
+
+                        // Replace the old type name with the new type name
+                        newFileContent = newFileContent.Replace(fileLine, newFileLine);
                     }
-
-                    // Parse the old type name from the line
-                    string[] fileLineSegments = fileLine.Replace("ICollection", "").Replace("<", "").Replace(">", "").Split(" ");
-                    string oldTypeName = fileLineSegments[Array.IndexOf(fileLineSegments, "virtual") + 1];
-
-                    if (!_entityTypeNameDictionary.TryGetValue(oldTypeName, out string newTypeName))
+                    // If this line is declaring an Entity property...
+                    else if (fileLine.Trim().StartsWith("public virtual "))
                     {
-                        Console.WriteLine($"Could not find matching type name reference in _entityTypeNameDictionary for type name {oldTypeName}");
-                        continue;
-                    }
+                        // Parse the old type name from the line
+                        string[] fileLineSegments = fileLine.Trim().Replace("ICollection", "").Replace("<", "").Replace(">", "").Split(" ");
+                        string oldTypeName = fileLineSegments[Array.IndexOf(fileLineSegments, "virtual") + 1];
 
-                    // Replace the old type name with the new type name
-                    newFileContent = newFileContent.Replace(fileLine, ReplaceFirst(fileLine, oldTypeName, newTypeName));
+                        if (!_entityTypeNameDictionary.TryGetValue(oldTypeName, out string newTypeName))
+                        {
+                            Console.WriteLine($"Could not update property type. Could not find matching type name reference in _entityTypeNameDictionary for type name {oldTypeName}");
+                            continue;
+                        }
+
+                        string newFileLine = fileLine;
+
+                        if (fileLine.Contains("ICollection"))
+                        {
+                            // Parse the old property name from the line
+                            string oldPropertyName = fileLine.Trim().Replace(" { get; set; }", "").Split(" ").Last();
+
+                            // Pluralize it
+                            string newPropertyName = _pluralizer.Pluralize(oldPropertyName);
+
+                            // Replace it in the destination
+                            newFileLine = fileLine.Replace(fileLine, fileLine.Replace($"{oldPropertyName} ", $"{newPropertyName} "));
+                        }
+
+                        // Update the entity type name
+                        string newFileContents = ReplaceFirst(newFileLine, oldTypeName, newTypeName);
+
+                        // Replace the old type name with the new type name
+                        newFileContent = newFileContent.Replace(fileLine, newFileContents);
+                    }
                 }
 
                 // Overwrite the context file with the new content
@@ -134,7 +175,7 @@ namespace Utilities.FileProcessors.CSharp
 
                 if (!_entityTypeNameDictionary.TryGetValue(oldTypeName, out string newTypeName))
                 {
-                    Console.WriteLine($"Could not find matching type name reference in _entityTypeNameDictionary for type name {oldTypeName}");
+                    Console.WriteLine($"Could not rename file. Could not find matching type name reference in _entityTypeNameDictionary for type name {oldTypeName}");
                     state.Break();
                 }
 
@@ -176,17 +217,46 @@ namespace Utilities.FileProcessors.CSharp
                 await File.WriteAllTextAsync(fileInfo.FullName, newFileContent, cancellationToken);
 
                 // Read it back as an array, we'll be doing line-by-line replacements from here
-                string[] contextFileLines = await File.ReadAllLinesAsync(fileInfo.FullName, cancellationToken);
+                string[] fileLines = await File.ReadAllLinesAsync(fileInfo.FullName, cancellationToken);
 
                 // Remove the password left behind be EF's generator
-                string lineWithConnectionString = contextFileLines.SingleOrDefault(fl => fl.Contains("optionsBuilder.UseSqlServer("));
-                string lineWithConnectionStringComment = contextFileLines.SingleOrDefault(fl => fl.Contains("#warning To protect potentially sensitive information in your connection string"));
+                string lineWithConnectionString = fileLines.SingleOrDefault(fl => fl.Contains("optionsBuilder.UseSqlServer("));
+                string lineWithConnectionStringComment = fileLines.SingleOrDefault(fl => fl.Contains("#warning To protect potentially sensitive information in your connection string"));
 
                 if (!string.IsNullOrEmpty(lineWithConnectionString) && !string.IsNullOrEmpty(lineWithConnectionStringComment))
                 {
                     newFileContent = newFileContent
                         .Replace(lineWithConnectionString, "")
                         .Replace(lineWithConnectionStringComment, "");
+                }
+
+                // Pluralize the collection names on the context
+                foreach (string fileLine in fileLines)
+                {
+                    // If this line is declaring a property...
+                    if (fileLine.Trim().StartsWith("public virtual DbSet<"))
+                    {
+                        // Parse the old property name from the line
+                        string oldPropertyName = fileLine.Trim().Replace(" { get; set; }", "").Split(" ").Last();
+
+                        // Pluralize it
+                        string newPropertyName = _pluralizer.Pluralize(oldPropertyName);
+
+                        // Replace it in the destination
+                        newFileContent = newFileContent.Replace(fileLine, fileLine.Replace($"{oldPropertyName} ", $"{newPropertyName} "));
+                    }
+                    // If this line is defining a entity relationship for a child collection...
+                    else if (fileLine.Trim().StartsWith(".WithMany("))
+                    {
+                        // Parse the old property name from the line
+                        string oldPropertyName = fileLine.Trim().Replace(".WithMany(", "").Replace(")", "");
+
+                        // Pluralize it
+                        string newPropertyName = _pluralizer.Pluralize(oldPropertyName);
+
+                        // Replace it in the destination
+                        newFileContent = newFileContent.Replace(fileLine, fileLine.Replace($"{oldPropertyName}", $"{newPropertyName}"));
+                    }
                 }
 
                 // Overwrite the context file with the new content

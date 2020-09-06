@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using Pluralize.NET.Core;
 using Utilities.Common.Providers;
 using Utilities.Domain.Customer.Context;
 
@@ -46,6 +47,7 @@ namespace Utilities
 
             // Add other services needed to run the application
             serviceCollection.AddSingleton(_configuration);
+            serviceCollection.AddTransient<Pluralizer>();
             serviceCollection.AddTransient<RandomNumberProvider>();
             serviceCollection.AddTransient<RandomCodeProvider>();
             serviceCollection.AddTransient<IDelimitedFileHandler, GenericParsingDelimitedFileHandler>();
