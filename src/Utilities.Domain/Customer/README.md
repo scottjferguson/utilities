@@ -18,7 +18,7 @@ cd src\Utilities.Domain
 // dotnet tool install --global dotnet-ef --version 3.1.5
 // ...or this to update it: dotnet tool update --global dotnet-ef
 
-dotnet ef dbcontext scaffold "Data Source=guroo-trieve-dev.database.windows.net;Initial Catalog=Customer;User ID=SystemUser;Password={{DatabasePassword}};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;" Microsoft.EntityFrameworkCore.SqlServer -o Customer\Entities -f
+dotnet ef dbcontext scaffold "Data Source=guroo-server-dev.database.windows.net;Initial Catalog=Customer;User ID=GurooBatch;Password={{DatabasePassword}};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;" Microsoft.EntityFrameworkCore.SqlServer -o Customer\Entities -f
 
 **!! Be sure to remove the connection string from the generated DbContext method OnConfiguring(). It contains the password in plain text !!**
 

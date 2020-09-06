@@ -14,17 +14,17 @@ namespace Utilities.DatabaseProcessors.Customer
     [Processor(Name = "CreateCustomer")]
     public class CreateCustomerProcessor : ProcessorBase
     {
-        private readonly UtilitiesCustomerContext _dbContext;
+        private readonly CustomerDbContext _dbContext;
         private readonly RandomCodeProvider _randomCodeProvider;
 
         public CreateCustomerProcessor(
-            UtilitiesCustomerContext dbContext,
+            CustomerDbContext dbContext,
             RandomCodeProvider randomCodeProvider)
         {
             _dbContext = dbContext;
             _randomCodeProvider = randomCodeProvider;
         }
-
+        
         public override async Task ProcessAsync(CancellationToken cancellationToken)
         {
             foreach (CustomerModel customerModel in GetCustomersToCreate())
@@ -52,13 +52,15 @@ namespace Utilities.DatabaseProcessors.Customer
 
         private Domain.Customer.Entities.Customer MapToEntity(CustomerModel customer)
         {
-            string customerNumber = _randomCodeProvider.GenerateConfirmationNumber(10, "000");
+            string customerNumber = _randomCodeProvider.GenerateConfirmationNumber(10, "100");
 
             return new Domain.Customer.Entities.Customer
             {
                 CustomerStatusId = 1,
                 CustomerTypeId = 1,
+                BrandCode = "GUR",
                 CustomerNumber = customerNumber,
+                CustomerGlobalId = customer.CustomerGlobalId,
                 JoinDate = CreatedDate,
                 CreatedBy = CreatedBy,
                 CreatedDate = CreatedDate,

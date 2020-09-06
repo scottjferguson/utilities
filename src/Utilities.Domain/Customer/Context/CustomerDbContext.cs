@@ -4,11 +4,11 @@ using Utilities.Domain.Customer.Entities;
 
 namespace Utilities.Domain.Customer.Context
 {
-    public class UtilitiesCustomerContext : CustomerContext
+    public class CustomerDbContext : CustomerContext
     {
         private readonly IConnectionStringProvider _connectionStringProvider;
 
-        public UtilitiesCustomerContext(IConnectionStringProvider connectionStringProvider)
+        public CustomerDbContext(IConnectionStringProvider connectionStringProvider)
         {
             _connectionStringProvider = connectionStringProvider;
         }

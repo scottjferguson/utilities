@@ -4,12 +4,13 @@
     {
         public CustomerModel() { }
 
-        public CustomerModel(string firstName, string lastName, string emailAddress, string phoneNumber, string addressLine1, string city, string stateProv, string postalCode, string status = "Active")
+        public CustomerModel(string firstName, string lastName, string emailAddress, string phoneNumber, string addressLine1, string city, string stateProv, string postalCode, string customerGlobalId = null, string status = "Active")
         {
             FirstName = firstName;
             LastName = lastName;
             EmailAddress = emailAddress;
             PhoneNumber = phoneNumber;
+            CustomerGlobalId = customerGlobalId;
             Status = status;
             BillingAddress = new AddressModel
             {
@@ -25,6 +26,8 @@
         public string PhoneNumber { get; set; }
 
         public string Status { get; set; }
+
+        public string CustomerGlobalId { get; set; }
 
         public AddressModel BillingAddress { get; set; }
 

@@ -39,7 +39,7 @@ namespace Utilities
             serviceCollection.AddSqlServerDatabaseCommander(_configuration);
 
             // Add Entity Framework
-            serviceCollection.AddDbContext<UtilitiesCustomerContext>();
+            serviceCollection.AddDbContext<CustomerDbContext>();
 
             // Add all Processors
             AddProcessors(serviceCollection);

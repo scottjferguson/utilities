@@ -40,6 +40,15 @@ namespace Utilities.Domain.Customer.Entities
         public virtual DbSet<PhoneNumberHistory> PhoneNumberHistory { get; set; }
         public virtual DbSet<PhoneNumberType> PhoneNumberType { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Data Source=guroo-server-dev.database.windows.net;Initial Catalog=Customer;User ID=GurooBatch;Password=dutr#gV$inq94ds2;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Address>(entity =>
@@ -122,7 +131,6 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
 
                 entity.Property(e => e.PostalCodeLastFour)
-                    .IsRequired()
                     .HasMaxLength(4)
                     .IsUnicode(false);
 
@@ -217,7 +225,6 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
 
                 entity.Property(e => e.PostalCodeLastFour)
-                    .IsRequired()
                     .HasMaxLength(4)
                     .IsUnicode(false);
 
@@ -272,6 +279,9 @@ namespace Utilities.Domain.Customer.Entities
 
             modelBuilder.Entity<Customer>(entity =>
             {
+                entity.HasIndex(e => e.BrandCode)
+                    .HasName("IX__Customer__BrandCode");
+
                 entity.HasIndex(e => e.CustomerGlobalId)
                     .HasName("IX__Customer__CustomerGlobalID");
 
@@ -282,6 +292,11 @@ namespace Utilities.Domain.Customer.Entities
                     .HasName("IX__Customer__ExternalReferenceID");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.BrandCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -488,6 +503,11 @@ namespace Utilities.Domain.Customer.Entities
             modelBuilder.Entity<CustomerHistory>(entity =>
             {
                 entity.Property(e => e.CustomerHistoryId).HasColumnName("CustomerHistoryID");
+
+                entity.Property(e => e.BrandCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ChangeType)
                     .IsRequired()

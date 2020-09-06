@@ -16,6 +16,7 @@ namespace Utilities.Domain.Customer.Entities
         public long PersonId { get; set; }
         public int CustomerStatusId { get; set; }
         public int CustomerTypeId { get; set; }
+        public string BrandCode { get; set; }
         public string CustomerNumber { get; set; }
         public DateTime JoinDate { get; set; }
         public bool? IsActive { get; set; }

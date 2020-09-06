@@ -16,6 +16,7 @@
     <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.123" />
     <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
+    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
