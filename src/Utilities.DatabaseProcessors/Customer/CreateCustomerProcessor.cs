@@ -41,12 +41,12 @@ namespace Utilities.DatabaseProcessors.Customer
         {
             return new List<CustomerModel>
             {
-                new CustomerModel("Scott", "Ferguson", "scott@guroosolutions.com", "555-555-5555", "1 Main St.", "Austin", "TX", "78701"),
+                new CustomerModel("Scott", "Ferguson", "scott@guroosolutions.com", "555-555-5555", "1 Main St.", "Austin", "TX", "78701", "72C931AF-53BC-409F-8EFA-21198FB724CD"),
+                new CustomerModel("Guroo", "Test", "scott.ferguson82@gmail.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77001", "2B53FCBF-6FC1-467F-BC51-7FB9943E0110"),
                 new CustomerModel("Pradeep", "Tiwari", "pradeep@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77047"),
                 new CustomerModel("Andy", "Gregory", "andy@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77301"),
                 new CustomerModel("Ed", "Janson", "ed@guroosolutions.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77001"),
-                new CustomerModel("Manicka", "Manikandan", "manicka.manikandan@publicissapient.com", "555-555-5555", "1 Main St.", "Arlington", "VA", "22201"),
-                new CustomerModel("Test", "User", "test@test.com", "555-555-5555", "1 Main St.", "Houston", "TX", "77001")
+                new CustomerModel("Manicka", "Manikandan", "manicka.manikandan@publicissapient.com", "555-555-5555", "1 Main St.", "Arlington", "VA", "22201")
             };
         }
 
