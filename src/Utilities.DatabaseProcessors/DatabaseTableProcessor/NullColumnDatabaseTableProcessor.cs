@@ -7,7 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Common;
+using Utilities.Domain.Framework;
 
 namespace Utilities.DatabaseProcessors.DatabaseTableProcessor
 {
@@ -20,7 +20,7 @@ namespace Utilities.DatabaseProcessors.DatabaseTableProcessor
 
         public NullColumnDatabaseTableProcessor(IDatabaseCommanderFactory databaseCommanderFactory)
         {
-            _databaseCommander = databaseCommanderFactory.Create(Constants.Configuration.ConnectionString.DefaultConnection);
+            _databaseCommander = databaseCommanderFactory.Create();
         }
 
         public override async Task ProcessAsync(CancellationToken cancellationToken)

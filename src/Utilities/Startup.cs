@@ -1,12 +1,13 @@
 ﻿using Core.Plugins;
 using Core.Plugins.Configuration;
 using Core.Plugins.FileHandling;
+using ECommerce.Services;
+using ECommerce.Services.Impl;
 using FluentCommander.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pluralize.NET.Core;
 using Processor;
-using Utilities.Common.Providers;
 using Utilities.Domain.Customer.Context;
 
 namespace Utilities
@@ -35,8 +36,7 @@ namespace Utilities
 
             // Add other services needed to run the application
             services.AddTransient<Pluralizer>();
-            services.AddTransient<RandomNumberProvider>();
-            services.AddTransient<RandomCodeProvider>();
+            services.AddTransient<IConfirmationNumberService, ConfirmationNumberService>();
         }
 
         private PluginConfiguration BuildPluginConfiguration(IConfiguration configuration)

@@ -17,11 +17,12 @@
     <PackageReference Include="Relay.Core.Plugins" Version="1.0.225" />
     <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.225" />
     <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.225" />
+    <PackageReference Include="Relay.ECommerce" Version="1.0.2" />
+    <PackageReference Include="Relay.Extensions" Version="1.0.5" />
     <PackageReference Include="Relay.Processor" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Utilities.Common\Utilities.Common.csproj" />
     <ProjectReference Include="..\Utilities.DatabaseProcessors\Utilities.DatabaseProcessors.csproj" />
     <ProjectReference Include="..\Utilities.Domain\Utilities.Domain.csproj" />
     <ProjectReference Include="..\Utilities.FileProcessors\Utilities.FileProcessors.csproj" />

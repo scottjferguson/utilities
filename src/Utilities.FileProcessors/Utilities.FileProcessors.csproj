@@ -14,13 +14,14 @@
     <PackageReference Include="Relay.Core" Version="1.0.156" />
     <PackageReference Include="Relay.Core.Plugins" Version="1.0.225" />
     <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.225" />
+    <PackageReference Include="Relay.Extensions" Version="1.0.5" />
     <PackageReference Include="Relay.Processor" Version="1.0.1" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Utilities.Common\Utilities.Common.csproj" />
+    <ProjectReference Include="..\Utilities.Domain\Utilities.Domain.csproj" />
   </ItemGroup>
 
 </Project>

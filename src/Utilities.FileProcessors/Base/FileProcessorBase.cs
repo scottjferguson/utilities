@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Utilities.Common;
+using Utilities.Domain.Framework;
 
 namespace Utilities.FileProcessors.Base
 {

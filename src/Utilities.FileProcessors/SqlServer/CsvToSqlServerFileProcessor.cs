@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Common;
+using Utilities.Domain;
+using Utilities.Domain.Framework;
 using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.SqlServer

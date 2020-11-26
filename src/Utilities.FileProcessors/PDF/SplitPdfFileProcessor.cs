@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Common;
+using Utilities.Domain.Framework;
 
 namespace Utilities.FileProcessors.PDF
 {
