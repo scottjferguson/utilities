@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Utilities.Domain.Customer.Entities
 {
-    public partial class CustomerAttribute
+    public partial class AttributeEntity : Core.Framework.IAuditable
     {
-        public long CustomerAttributeId { get; set; }
+        public long AttributeId { get; set; }
         public long CustomerId { get; set; }
-        public int CustomerAttributeTypeId { get; set; }
+        public int AttributeTypeId { get; set; }
         public string AttributeValue { get; set; }
         public byte[] RowVersion { get; set; }
         public string CreatedBy { get; set; }
@@ -15,7 +15,7 @@ namespace Utilities.Domain.Customer.Entities
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual Customer Customer { get; set; }
-        public virtual CustomerAttributeType CustomerAttributeType { get; set; }
+        public virtual AttributeTypeEntity AttributeType { get; set; }
+        public virtual CustomerEntity Customer { get; set; }
     }
 }

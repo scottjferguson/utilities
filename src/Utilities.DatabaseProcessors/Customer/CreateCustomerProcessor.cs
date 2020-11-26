@@ -1,4 +1,5 @@
-﻿using ECommerce.Services;
+﻿using ECommerce;
+using ECommerce.Services;
 using Processor;
 using System.Collections.Generic;
 using System.Threading;
@@ -29,7 +30,7 @@ namespace Utilities.DatabaseProcessors.Customer
             {
                 var customerEntity = MapToEntity(customer);
 
-                await _dbContext.Customer.AddAsync(customerEntity, cancellationToken);
+                await _dbContext.Customers.AddAsync(customerEntity, cancellationToken);
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
@@ -55,9 +56,9 @@ namespace Utilities.DatabaseProcessors.Customer
                 LastName = lastName,
                 CustomerStatus = status,
                 ExternalReferenceId = customerGlobalId,
-                Addresses = new List<ECommerce.Address>
+                Addresses = new List<Address>
                 {
-                    new ECommerce.Address
+                    new Address
                     {
                         Line1 = addressLine1,
                         City = city,
@@ -65,16 +66,16 @@ namespace Utilities.DatabaseProcessors.Customer
                         PostalCode = postalCode
                     }
                 },
-                EmailAddresses = new List<ECommerce.EmailAddress>
+                EmailAddresses = new List<EmailAddress>
                 {
-                    new ECommerce.EmailAddress
+                    new EmailAddress
                     {
                         EmailAddressValue = emailAddress
                     }
                 },
-                PhoneNumbers = new List<ECommerce.PhoneNumber>
+                PhoneNumbers = new List<PhoneNumber>
                 {
-                    new ECommerce.PhoneNumber
+                    new PhoneNumber
                     {
                         PhoneNumberValue = phoneNumber
                     }
@@ -82,75 +83,46 @@ namespace Utilities.DatabaseProcessors.Customer
             };
         }
 
-        private Domain.Customer.Entities.Customer MapToEntity(ECommerce.Customer customer)
+        private CustomerEntity MapToEntity(ECommerce.Customer customer)
         {
             string customerNumber = _confirmationNumberService.GenerateConfirmationNumber(10, "100");
 
-            return new Domain.Customer.Entities.Customer
+            return new CustomerEntity
             {
                 CustomerStatusId = 1,
                 CustomerTypeId = 1,
                 BrandCode = "GUR",
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
                 CustomerNumber = customerNumber,
                 CustomerGlobalId = customer.ExternalReferenceId,
                 JoinDate = CreatedDate,
-                CreatedBy = CreatedBy,
-                CreatedDate = CreatedDate,
-                Person = new Person
+                Addresses = new List<AddressEntity>
                 {
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName,
-                    CreatedBy = CreatedBy,
-                    CreatedDate = CreatedDate,
-                    PersonToAddress = new List<PersonToAddress>
+                    new AddressEntity
                     {
-                        new PersonToAddress
-                        {
-                            Address = new Address
-                            {
-                                AddressTypeId = 2,
-                                Line1 = customer.Addresses[0].Line1,
-                                City = customer.Addresses[0].City,
-                                StateProv = customer.Addresses[0].StateProv,
-                                PostalCode = customer.Addresses[0].PostalCode,
-                                CountryCode = "US",
-                                CreatedBy = CreatedBy,
-                                CreatedDate = CreatedDate
-                            },
-                            IsPrimaryBilling = true,
-                            CreatedBy = CreatedBy,
-                            CreatedDate = CreatedDate
-                        }
-                    },
-                    PersonToEmailAddress = new List<PersonToEmailAddress>
+                        AddressTypeId = 2,
+                        Line1 = customer.Addresses[0].Line1,
+                        City = customer.Addresses[0].City,
+                        StateProv = customer.Addresses[0].StateProv,
+                        PostalCode = customer.Addresses[0].PostalCode,
+                        CountryCode = "US"
+                    }
+                },
+                EmailAddresses = new List<EmailAddressEntity>
+                {
+                    new EmailAddressEntity
                     {
-                        new PersonToEmailAddress
-                        {
-                            EmailAddress = new EmailAddress
-                            {
-                                EmailAddressTypeId = 1,
-                                EmailAddress1 = customer.EmailAddresses[0].EmailAddressValue,
-                                CreatedBy = CreatedBy,
-                                CreatedDate = CreatedDate
-                            },
-                            CreatedBy = CreatedBy,
-                            CreatedDate = CreatedDate
-                        }
-                    },
-                    PersonToPhoneNumber = new List<PersonToPhoneNumber>
+                        EmailAddressTypeId = 1,
+                        EmailAddress1 = customer.EmailAddresses[0].EmailAddressValue
+                    }
+                },
+                PhoneNumbers = new List<PhoneNumberEntity>
+                {
+                    new PhoneNumberEntity
                     {
-                        new PersonToPhoneNumber
-                        {
-                            PhoneNumber = new PhoneNumber
-                            {
-                                PhoneNumberTypeId = 1,
-                                PhoneNumber1 = customer.PhoneNumbers[0].PhoneNumberValue,
-                                CreatedBy = CreatedBy,
-                                CreatedDate = CreatedDate
-                            },
-                            CreatedBy = CreatedBy,
-                            CreatedDate = CreatedDate
-                        }
+                        PhoneNumberTypeId = 1,
+                        PhoneNumber1 = customer.PhoneNumbers[0].PhoneNumberValue
                     }
                 }
             };

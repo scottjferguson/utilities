@@ -16,6 +16,7 @@
     <PackageReference Include="Relay.Core" Version="1.0.156" />
     <PackageReference Include="Relay.Core.Plugins" Version="1.0.225" />
     <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.225" />
+    <PackageReference Include="Relay.Core.Plugins.EntityFramework" Version="1.0.225" />
     <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.225" />
     <PackageReference Include="Relay.ECommerce" Version="1.0.2" />
     <PackageReference Include="Relay.Extensions" Version="1.0.5" />

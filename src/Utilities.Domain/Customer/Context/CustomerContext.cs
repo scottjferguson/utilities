@@ -1,8 +1,7 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Utilities.Domain.Customer.Entities;
 
-namespace Utilities.Domain.Customer.Entities
+namespace Utilities.Domain.Customer.Context
 {
     public partial class CustomerContext : DbContext
     {
@@ -15,47 +14,48 @@ namespace Utilities.Domain.Customer.Entities
         {
         }
 
-        public virtual DbSet<Address> Address { get; set; }
-        public virtual DbSet<AddressHistory> AddressHistory { get; set; }
-        public virtual DbSet<AddressType> AddressType { get; set; }
-        public virtual DbSet<Customer> Customer { get; set; }
-        public virtual DbSet<CustomerAttribute> CustomerAttribute { get; set; }
-        public virtual DbSet<CustomerAttributeHistory> CustomerAttributeHistory { get; set; }
-        public virtual DbSet<CustomerAttributeType> CustomerAttributeType { get; set; }
-        public virtual DbSet<CustomerHistory> CustomerHistory { get; set; }
-        public virtual DbSet<CustomerNote> CustomerNote { get; set; }
-        public virtual DbSet<CustomerNoteType> CustomerNoteType { get; set; }
-        public virtual DbSet<CustomerStatus> CustomerStatus { get; set; }
-        public virtual DbSet<CustomerType> CustomerType { get; set; }
-        public virtual DbSet<EmailAddress> EmailAddress { get; set; }
-        public virtual DbSet<EmailAddressHistory> EmailAddressHistory { get; set; }
-        public virtual DbSet<EmailAddressType> EmailAddressType { get; set; }
-        public virtual DbSet<Person> Person { get; set; }
-        public virtual DbSet<PersonHistory> PersonHistory { get; set; }
-        public virtual DbSet<PersonToAddress> PersonToAddress { get; set; }
-        public virtual DbSet<PersonToEmailAddress> PersonToEmailAddress { get; set; }
-        public virtual DbSet<PersonToPhoneNumber> PersonToPhoneNumber { get; set; }
-        public virtual DbSet<PersonType> PersonType { get; set; }
-        public virtual DbSet<PhoneNumber> PhoneNumber { get; set; }
-        public virtual DbSet<PhoneNumberHistory> PhoneNumberHistory { get; set; }
-        public virtual DbSet<PhoneNumberType> PhoneNumberType { get; set; }
+        public virtual DbSet<AddressEntity> Addresses { get; set; }
+        public virtual DbSet<AddressHistoryEntity> AddressHistories { get; set; }
+        public virtual DbSet<AddressTypeEntity> AddressTypes { get; set; }
+        public virtual DbSet<AttributeEntity> Attribute { get; set; }
+        public virtual DbSet<AttributeHistoryEntity> AttributeHistories { get; set; }
+        public virtual DbSet<AttributeTypeEntity> AttributeTypes { get; set; }
+        public virtual DbSet<CustomerEntity> Customers { get; set; }
+        public virtual DbSet<CustomerHistoryEntity> CustomerHistories { get; set; }
+        public virtual DbSet<CustomerSourceEntity> CustomerSources { get; set; }
+        public virtual DbSet<CustomerStatusEntity> CustomerStatuses { get; set; }
+        public virtual DbSet<CustomerTypeEntity> CustomerTypes { get; set; }
+        public virtual DbSet<EmailAddressEntity> EmailAddresses { get; set; }
+        public virtual DbSet<EmailAddressHistoryEntity> EmailAddressHistories { get; set; }
+        public virtual DbSet<EmailAddressTypeEntity> EmailAddressTypes { get; set; }
+        public virtual DbSet<EventEntity> Events { get; set; }
+        public virtual DbSet<EventTypeEntity> EventTypes { get; set; }
+        public virtual DbSet<NoteEntity> Notes { get; set; }
+        public virtual DbSet<NoteTypeEntity> NoteTypes { get; set; }
+        public virtual DbSet<PhoneNumberEntity> PhoneNumbers { get; set; }
+        public virtual DbSet<PhoneNumberHistoryEntity> PhoneNumberHistories { get; set; }
+        public virtual DbSet<PhoneNumberTypeEntity> PhoneNumberTypes { get; set; }
+        public virtual DbSet<SearchEntity> Searches { get; set; }
+        public virtual DbSet<SearchTermTypeEntity> SearchTermTypes { get; set; }
+        public virtual DbSet<UsernameEntity> Usernames { get; set; }
+        public virtual DbSet<VwCustomerEntity> VwCustomers { get; set; }
+        public virtual DbSet<VwCustomerAttributeEntity> VwCustomerAttributes { get; set; }
+        public virtual DbSet<VwCustomerDetailEntity> VwCustomerDetails { get; set; }
+        public virtual DbSet<VwPersonEntity> VwPeople { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=guroo-server-dev.database.windows.net;Initial Catalog=Customer;User ID=GurooBatch;Password=dutr#gV$inq94ds2;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
+
+
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Address>(entity =>
+            modelBuilder.Entity<AddressEntity>(entity =>
             {
-                entity.HasIndex(e => e.AddressGlobalId)
-                    .HasName("IX__Address__AddressGlobalID");
-
                 entity.HasIndex(e => e.City)
                     .HasName("IX__Address__City");
 
@@ -65,22 +65,14 @@ namespace Utilities.Domain.Customer.Entities
                 entity.HasIndex(e => e.Line1)
                     .HasName("IX__Address__Line1");
 
+                entity.HasIndex(e => e.Line2)
+                    .HasName("IX__Address__Line2");
+
                 entity.HasIndex(e => e.PostalCode)
                     .HasName("IX__Address__PostalCode");
 
                 entity.HasIndex(e => e.StateProv)
                     .HasName("IX__Address__StateProv");
-
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
-
-                entity.Property(e => e.AddressGlobalId)
-                    .IsRequired()
-                    .HasColumnName("AddressGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.AddressTypeId).HasColumnName("AddressTypeID");
 
                 entity.Property(e => e.City)
                     .IsRequired()
@@ -105,6 +97,14 @@ namespace Utilities.Domain.Customer.Entities
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IsPhysical)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Line1)
                     .IsRequired()
@@ -145,26 +145,20 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.AddressType)
-                    .WithMany(p => p.Address)
+                    .WithMany(p => p.Addresses)
                     .HasForeignKey(d => d.AddressTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Address__AddressTypeID");
+                    .HasConstraintName("FK__Address__AddressTypeId");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Addresses)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Address__CustomerId");
             });
 
-            modelBuilder.Entity<AddressHistory>(entity =>
+            modelBuilder.Entity<AddressHistoryEntity>(entity =>
             {
-                entity.Property(e => e.AddressHistoryId).HasColumnName("AddressHistoryID");
-
-                entity.Property(e => e.AddressGlobalId)
-                    .IsRequired()
-                    .HasColumnName("AddressGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
-
-                entity.Property(e => e.AddressTypeId).HasColumnName("AddressTypeID");
-
                 entity.Property(e => e.ChangeType)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -234,12 +228,18 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<AddressType>(entity =>
+            modelBuilder.Entity<AddressTypeEntity>(entity =>
             {
+                entity.HasIndex(e => e.Code)
+                    .HasName("IX__AddressType__Code");
+
                 entity.HasIndex(e => e.Name)
                     .HasName("IX__AddressType__Name");
 
-                entity.Property(e => e.AddressTypeId).HasColumnName("AddressTypeID");
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -277,23 +277,91 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Customer>(entity =>
+            modelBuilder.Entity<AttributeEntity>(entity =>
             {
-                entity.HasIndex(e => e.BrandCode)
-                    .HasName("IX__Customer__BrandCode");
+                entity.Property(e => e.AttributeValue)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
 
-                entity.HasIndex(e => e.CustomerGlobalId)
-                    .HasName("IX__Customer__CustomerGlobalID");
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
 
-                entity.HasIndex(e => e.CustomerNumber)
-                    .HasName("IX__Customer__CustomerNumber");
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
 
-                entity.HasIndex(e => e.ExternalReferenceId)
-                    .HasName("IX__Customer__ExternalReferenceID");
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.BrandCode)
+                entity.Property(e => e.RowVersion)
+                    .IsRequired()
+                    .IsRowVersion()
+                    .IsConcurrencyToken();
+
+                entity.HasOne(d => d.AttributeType)
+                    .WithMany(p => p.Attributes)
+                    .HasForeignKey(d => d.AttributeTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Attribute__AttributeTypeId");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Attributes)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Attribute__CustomerId");
+            });
+
+            modelBuilder.Entity<AttributeHistoryEntity>(entity =>
+            {
+                entity.Property(e => e.AttributeValue)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ChangeType)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.HistoryCreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.HistoryCreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<AttributeTypeEntity>(entity =>
+            {
+                entity.HasIndex(e => e.Code)
+                    .HasName("IX__AttributeType__Code");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("IX__AttributeType__Name");
+
+                entity.Property(e => e.Code)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -308,9 +376,74 @@ namespace Utilities.Domain.Customer.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getutcdate())");
 
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DisplayName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<CustomerEntity>(entity =>
+            {
+                entity.HasIndex(e => e.BrandCode)
+                    .HasName("IX__Customer__BrandCode");
+
+                entity.HasIndex(e => e.CustomerGlobalId)
+                    .HasName("IX__Customer__CustomerGlobalId");
+
+                entity.HasIndex(e => e.CustomerNumber)
+                    .HasName("IX__Customer__CustomerNumber");
+
+                entity.HasIndex(e => e.FirstName)
+                    .HasName("IX__Customer__FirstName");
+
+                entity.HasIndex(e => e.LastName)
+                    .HasName("IX__Customer__LastName");
+
+                entity.Property(e => e.AvatarUrl)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BrandCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BusinessName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
                 entity.Property(e => e.CustomerGlobalId)
                     .IsRequired()
-                    .HasColumnName("CustomerGlobalID")
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasDefaultValueSql("(newid())");
@@ -320,12 +453,12 @@ namespace Utilities.Domain.Customer.Entities
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CustomerStatusId).HasColumnName("CustomerStatusID");
-
-                entity.Property(e => e.CustomerTypeId).HasColumnName("CustomerTypeID");
-
                 entity.Property(e => e.ExternalReferenceId)
-                    .HasColumnName("ExternalReferenceID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -333,7 +466,12 @@ namespace Utilities.Domain.Customer.Entities
                     .IsRequired()
                     .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.JoinDate).HasColumnType("datetime");
+                entity.Property(e => e.JoinDate).HasColumnType("date");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(100)
@@ -341,172 +479,48 @@ namespace Utilities.Domain.Customer.Entities
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-
                 entity.Property(e => e.RowVersion)
                     .IsRequired()
                     .IsRowVersion()
                     .IsConcurrencyToken();
+
+                entity.HasOne(d => d.CustomerSource)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.CustomerSourceId)
+                    .HasConstraintName("FK__Customer__CustomerSourceId");
 
                 entity.HasOne(d => d.CustomerStatus)
-                    .WithMany(p => p.Customer)
+                    .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.CustomerStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__CustomerStatusID");
+                    .HasConstraintName("FK__Customer__CustomerStatusId");
 
                 entity.HasOne(d => d.CustomerType)
-                    .WithMany(p => p.Customer)
+                    .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.CustomerTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__CustomerTypeID");
+                    .HasConstraintName("FK__Customer__CustomerTypeId");
 
-                entity.HasOne(d => d.Person)
-                    .WithMany(p => p.Customer)
-                    .HasForeignKey(d => d.PersonId)
+                entity.HasOne(d => d.Username)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.UsernameId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__PersonID");
+                    .HasConstraintName("FK__Customer__UsernameId");
             });
 
-            modelBuilder.Entity<CustomerAttribute>(entity =>
+            modelBuilder.Entity<CustomerHistoryEntity>(entity =>
             {
-                entity.Property(e => e.CustomerAttributeId).HasColumnName("CustomerAttributeID");
-
-                entity.Property(e => e.AttributeValue)
-                    .IsRequired()
-                    .HasMaxLength(4000)
+                entity.Property(e => e.AvatarUrl)
+                    .HasMaxLength(2000)
                     .IsUnicode(false);
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.CustomerAttributeTypeId).HasColumnName("CustomerAttributeTypeID");
-
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.RowVersion)
-                    .IsRequired()
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
-
-                entity.HasOne(d => d.CustomerAttributeType)
-                    .WithMany(p => p.CustomerAttribute)
-                    .HasForeignKey(d => d.CustomerAttributeTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CustomerAttribute__CustomerAttributeTypeID");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerAttribute)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CustomerAttribute__CustomerID");
-            });
-
-            modelBuilder.Entity<CustomerAttributeHistory>(entity =>
-            {
-                entity.Property(e => e.CustomerAttributeHistoryId).HasColumnName("CustomerAttributeHistoryID");
-
-                entity.Property(e => e.AttributeValue)
-                    .IsRequired()
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ChangeType)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.CustomerAttributeId).HasColumnName("CustomerAttributeID");
-
-                entity.Property(e => e.CustomerAttributeTypeId).HasColumnName("CustomerAttributeTypeID");
-
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-
-                entity.Property(e => e.HistoryCreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.HistoryCreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<CustomerAttributeType>(entity =>
-            {
-                entity.HasIndex(e => e.Name)
-                    .HasName("IX__CustomerEventType__Name");
-
-                entity.Property(e => e.CustomerAttributeTypeId).HasColumnName("CustomerAttributeTypeID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DisplayName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<CustomerHistory>(entity =>
-            {
-                entity.Property(e => e.CustomerHistoryId).HasColumnName("CustomerHistoryID");
 
                 entity.Property(e => e.BrandCode)
                     .IsRequired()
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BusinessName)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ChangeType)
@@ -523,23 +537,20 @@ namespace Utilities.Domain.Customer.Entities
 
                 entity.Property(e => e.CustomerGlobalId)
                     .IsRequired()
-                    .HasColumnName("CustomerGlobalID")
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
                 entity.Property(e => e.CustomerNumber)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CustomerStatusId).HasColumnName("CustomerStatusID");
-
-                entity.Property(e => e.CustomerTypeId).HasColumnName("CustomerTypeID");
-
                 entity.Property(e => e.ExternalReferenceId)
-                    .HasColumnName("ExternalReferenceID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -552,7 +563,12 @@ namespace Utilities.Domain.Customer.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getutcdate())");
 
-                entity.Property(e => e.JoinDate).HasColumnType("datetime");
+                entity.Property(e => e.JoinDate).HasColumnType("date");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(100)
@@ -561,53 +577,18 @@ namespace Utilities.Domain.Customer.Entities
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<CustomerNote>(entity =>
+            modelBuilder.Entity<CustomerSourceEntity>(entity =>
             {
-                entity.Property(e => e.CustomerNoteId).HasColumnName("CustomerNoteID");
+                entity.HasIndex(e => e.Code)
+                    .HasName("IX__CustomerSource__Code");
 
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-
-                entity.Property(e => e.CustomerNoteTypeId).HasColumnName("CustomerNoteTypeID");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Note)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerNote)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CustomerNote__CustomerID");
-
-                entity.HasOne(d => d.CustomerNoteType)
-                    .WithMany(p => p.CustomerNote)
-                    .HasForeignKey(d => d.CustomerNoteTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CustomerNote__CustomerNoteTypeID");
-            });
-
-            modelBuilder.Entity<CustomerNoteType>(entity =>
-            {
                 entity.HasIndex(e => e.Name)
-                    .HasName("IX__CustomerNote__Name");
+                    .HasName("IX__CustomerSource__Name");
 
-                entity.Property(e => e.CustomerNoteTypeId).HasColumnName("CustomerNoteTypeID");
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -645,7 +626,7 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<CustomerStatus>(entity =>
+            modelBuilder.Entity<CustomerStatusEntity>(entity =>
             {
                 entity.HasIndex(e => e.Code)
                     .HasName("IX__CustomerStatus__Code");
@@ -659,8 +640,6 @@ namespace Utilities.Domain.Customer.Entities
                 entity.HasIndex(e => new { e.Name, e.SubStatusName })
                     .HasName("UC__CustomerStatus__Name__SubStatusName")
                     .IsUnique();
-
-                entity.Property(e => e.CustomerStatusId).HasColumnName("CustomerStatusID");
 
                 entity.Property(e => e.Code)
                     .IsRequired()
@@ -707,15 +686,13 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<CustomerType>(entity =>
+            modelBuilder.Entity<CustomerTypeEntity>(entity =>
             {
                 entity.HasIndex(e => e.Code)
                     .HasName("IX__CustomerType__Code");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("IX__CustomerType__Name");
-
-                entity.Property(e => e.CustomerTypeId).HasColumnName("CustomerTypeID");
 
                 entity.Property(e => e.Code)
                     .IsRequired()
@@ -758,15 +735,10 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<EmailAddress>(entity =>
+            modelBuilder.Entity<EmailAddressEntity>(entity =>
             {
                 entity.HasIndex(e => e.EmailAddress1)
                     .HasName("IX__EmailAddress__EmailAddress");
-
-                entity.HasIndex(e => e.EmailAddressGlobalId)
-                    .HasName("IX__EmailAddress__EmailAddressGlobalID");
-
-                entity.Property(e => e.EmailAddressId).HasColumnName("EmailAddressID");
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -781,17 +753,16 @@ namespace Utilities.Domain.Customer.Entities
                 entity.Property(e => e.EmailAddress1)
                     .IsRequired()
                     .HasColumnName("EmailAddress")
-                    .HasMaxLength(500)
+                    .HasMaxLength(320)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EmailAddressGlobalId)
+                entity.Property(e => e.IsActive)
                     .IsRequired()
-                    .HasColumnName("EmailAddressGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(newid())");
+                    .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.EmailAddressTypeId).HasColumnName("EmailAddressTypeID");
+                entity.Property(e => e.IsPrimary)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(100)
@@ -804,17 +775,21 @@ namespace Utilities.Domain.Customer.Entities
                     .IsRowVersion()
                     .IsConcurrencyToken();
 
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.EmailAddresses)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__EmailAddress__CustomerId");
+
                 entity.HasOne(d => d.EmailAddressType)
-                    .WithMany(p => p.EmailAddress)
+                    .WithMany(p => p.EmailAddresses)
                     .HasForeignKey(d => d.EmailAddressTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EmailAddress__EmailAddressTypeID");
+                    .HasConstraintName("FK__EmailAddress__EmailAddressTypeId");
             });
 
-            modelBuilder.Entity<EmailAddressHistory>(entity =>
+            modelBuilder.Entity<EmailAddressHistoryEntity>(entity =>
             {
-                entity.Property(e => e.EmailAddressHistoryId).HasColumnName("EmailAddressHistoryID");
-
                 entity.Property(e => e.ChangeType)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -832,16 +807,6 @@ namespace Utilities.Domain.Customer.Entities
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EmailAddressGlobalId)
-                    .IsRequired()
-                    .HasColumnName("EmailAddressGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EmailAddressId).HasColumnName("EmailAddressID");
-
-                entity.Property(e => e.EmailAddressTypeId).HasColumnName("EmailAddressTypeID");
-
                 entity.Property(e => e.HistoryCreatedBy)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -858,295 +823,13 @@ namespace Utilities.Domain.Customer.Entities
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<EmailAddressType>(entity =>
-            {
-                entity.HasIndex(e => e.Name)
-                    .HasName("IX__EmailAddressType__Name");
-
-                entity.Property(e => e.EmailAddressTypeId).HasColumnName("EmailAddressTypeID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(4000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DisplayName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Person>(entity =>
-            {
-                entity.HasIndex(e => e.FirstName)
-                    .HasName("IX__Person__FirstName");
-
-                entity.HasIndex(e => e.LastName)
-                    .HasName("IX__Person__LastName");
-
-                entity.HasIndex(e => e.PersonGlobalId)
-                    .HasName("IX__Person__PersonGlobalID");
-
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PersonGlobalId)
-                    .IsRequired()
-                    .HasColumnName("PersonGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.RowVersion)
-                    .IsRequired()
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
-            });
-
-            modelBuilder.Entity<PersonHistory>(entity =>
-            {
-                entity.Property(e => e.PersonHistoryId).HasColumnName("PersonHistoryID");
-
-                entity.Property(e => e.ChangeType)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.HistoryCreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.HistoryCreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PersonGlobalId)
-                    .IsRequired()
-                    .HasColumnName("PersonGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-            });
-
-            modelBuilder.Entity<PersonToAddress>(entity =>
-            {
-                entity.Property(e => e.PersonToAddressId).HasColumnName("PersonToAddressID");
-
-                entity.Property(e => e.AddressId).HasColumnName("AddressID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.IsPhysical)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-
-                entity.HasOne(d => d.Address)
-                    .WithMany(p => p.PersonToAddress)
-                    .HasForeignKey(d => d.AddressId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToAddress__AddressID");
-
-                entity.HasOne(d => d.Person)
-                    .WithMany(p => p.PersonToAddress)
-                    .HasForeignKey(d => d.PersonId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToAddress__PersonID");
-            });
-
-            modelBuilder.Entity<PersonToEmailAddress>(entity =>
-            {
-                entity.Property(e => e.PersonToEmailAddressId).HasColumnName("PersonToEmailAddressID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.EmailAddressId).HasColumnName("EmailAddressID");
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-
-                entity.HasOne(d => d.EmailAddress)
-                    .WithMany(p => p.PersonToEmailAddress)
-                    .HasForeignKey(d => d.EmailAddressId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToEmailAddress__EmailAddressID");
-
-                entity.HasOne(d => d.Person)
-                    .WithMany(p => p.PersonToEmailAddress)
-                    .HasForeignKey(d => d.PersonId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToEmailAddress__PersonID");
-            });
-
-            modelBuilder.Entity<PersonToPhoneNumber>(entity =>
-            {
-                entity.Property(e => e.PersonToPhoneNumberId).HasColumnName("PersonToPhoneNumberID");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(user_name())");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getutcdate())");
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.IsPrimary)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PersonId).HasColumnName("PersonID");
-
-                entity.Property(e => e.PhoneNumberId).HasColumnName("PhoneNumberID");
-
-                entity.HasOne(d => d.Person)
-                    .WithMany(p => p.PersonToPhoneNumber)
-                    .HasForeignKey(d => d.PersonId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToPhoneNumber__PersonID");
-
-                entity.HasOne(d => d.PhoneNumber)
-                    .WithMany(p => p.PersonToPhoneNumber)
-                    .HasForeignKey(d => d.PhoneNumberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PersonToPhoneNumber__PhoneNumberID");
-            });
-
-            modelBuilder.Entity<PersonType>(entity =>
+            modelBuilder.Entity<EmailAddressTypeEntity>(entity =>
             {
                 entity.HasIndex(e => e.Code)
-                    .HasName("IX__PersonType__Code");
+                    .HasName("IX__EmailAddressType__Code");
 
                 entity.HasIndex(e => e.Name)
-                    .HasName("IX__PersonType__Name");
-
-                entity.Property(e => e.PersonTypeId).HasColumnName("PersonTypeID");
+                    .HasName("IX__EmailAddressType__Name");
 
                 entity.Property(e => e.Code)
                     .IsRequired()
@@ -1189,15 +872,168 @@ namespace Utilities.Domain.Customer.Entities
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<PhoneNumber>(entity =>
+            modelBuilder.Entity<EventEntity>(entity =>
+            {
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.EventDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Notes).IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Event__CustomerId");
+
+                entity.HasOne(d => d.EventType)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.EventTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Event__EventTypeId");
+            });
+
+            modelBuilder.Entity<EventTypeEntity>(entity =>
+            {
+                entity.HasIndex(e => e.Name)
+                    .HasName("IX__EventType__Name");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DisplayName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<NoteEntity>(entity =>
+            {
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Note1)
+                    .IsRequired()
+                    .HasColumnName("Note")
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Notes)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Note__CustomerId");
+
+                entity.HasOne(d => d.NoteType)
+                    .WithMany(p => p.Notes)
+                    .HasForeignKey(d => d.NoteTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Note__NoteTypeId");
+            });
+
+            modelBuilder.Entity<NoteTypeEntity>(entity =>
+            {
+                entity.HasIndex(e => e.Code)
+                    .HasName("IX__Note__Code");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("IX__Note__Name");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DisplayName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PhoneNumberEntity>(entity =>
             {
                 entity.HasIndex(e => e.PhoneNumber1)
                     .HasName("IX__PhoneNumber__PhoneNumber");
 
-                entity.HasIndex(e => e.PhoneNumberGlobalId)
-                    .HasName("IX__PhoneNumber__PhoneNumberGlobalID");
-
-                entity.Property(e => e.PhoneNumberId).HasColumnName("PhoneNumberID");
+                entity.HasIndex(e => e.PhoneNumberNumeric)
+                    .HasName("IX__PhoneNumber__PhoneNumberNumeric");
 
                 entity.Property(e => e.CountryCode)
                     .IsRequired()
@@ -1215,7 +1051,15 @@ namespace Utilities.Domain.Customer.Entities
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getutcdate())");
 
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.IsOnDnclist).HasColumnName("IsOnDNCList");
+
+                entity.Property(e => e.IsPrimary)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(100)
@@ -1229,36 +1073,31 @@ namespace Utilities.Domain.Customer.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PhoneNumberGlobalId)
-                    .IsRequired()
-                    .HasColumnName("PhoneNumberGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("(newid())");
-
                 entity.Property(e => e.PhoneNumberNumeric)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PhoneNumberTypeId).HasColumnName("PhoneNumberTypeID");
 
                 entity.Property(e => e.RowVersion)
                     .IsRequired()
                     .IsRowVersion()
                     .IsConcurrencyToken();
 
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.PhoneNumbers)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PhoneNumber__CustomerId");
+
                 entity.HasOne(d => d.PhoneNumberType)
-                    .WithMany(p => p.PhoneNumber)
+                    .WithMany(p => p.PhoneNumbers)
                     .HasForeignKey(d => d.PhoneNumberTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PhoneNumber__PhoneNumberTypeID");
+                    .HasConstraintName("FK__PhoneNumber__PhoneNumberTypeId");
             });
 
-            modelBuilder.Entity<PhoneNumberHistory>(entity =>
+            modelBuilder.Entity<PhoneNumberHistoryEntity>(entity =>
             {
-                entity.Property(e => e.PhoneNumberHistoryId).HasColumnName("PhoneNumberHistoryID");
-
                 entity.Property(e => e.ChangeType)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -1298,28 +1137,24 @@ namespace Utilities.Domain.Customer.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PhoneNumberGlobalId)
-                    .IsRequired()
-                    .HasColumnName("PhoneNumberGlobalID")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PhoneNumberId).HasColumnName("PhoneNumberID");
-
                 entity.Property(e => e.PhoneNumberNumeric)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PhoneNumberTypeId).HasColumnName("PhoneNumberTypeID");
             });
 
-            modelBuilder.Entity<PhoneNumberType>(entity =>
+            modelBuilder.Entity<PhoneNumberTypeEntity>(entity =>
             {
+                entity.HasIndex(e => e.Code)
+                    .HasName("IX__PhoneNumberType__Code");
+
                 entity.HasIndex(e => e.Name)
                     .HasName("IX__PhoneNumberType__Name");
 
-                entity.Property(e => e.PhoneNumberTypeId).HasColumnName("PhoneNumberTypeID");
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CreatedBy)
                     .IsRequired()
@@ -1355,6 +1190,426 @@ namespace Utilities.Domain.Customer.Entities
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SearchEntity>(entity =>
+            {
+                entity.HasKey(e => e.SearchId)
+                    .HasName("PK__NC__Search__SearchId")
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.SearchTerm)
+                    .HasName("IX__CL__Search__SearchTerm")
+                    .IsClustered();
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.SearchTerm)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Searches)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Search__CustomerId");
+
+                entity.HasOne(d => d.SearchTermType)
+                    .WithMany(p => p.Searches)
+                    .HasForeignKey(d => d.SearchTermTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Search__SearchTermTypeId");
+            });
+
+            modelBuilder.Entity<SearchTermTypeEntity>(entity =>
+            {
+                entity.HasIndex(e => e.Name)
+                    .HasName("IX__SearchTermType__Name");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DisplayName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<UsernameEntity>(entity =>
+            {
+                entity.HasKey(e => e.UsernameId)
+                    .HasName("PK__NC__Username__UsernameId")
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.Username1)
+                    .HasName("IX__CL__Username__Username")
+                    .IsClustered();
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("(user_name())");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getutcdate())");
+
+                entity.Property(e => e.Username1)
+                    .IsRequired()
+                    .HasColumnName("Username")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VwCustomerEntity>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwCustomer");
+
+                entity.Property(e => e.BrandCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CustomerGlobalId)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerNumber)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerStatus)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExternalReferenceId)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.JoinDate).HasColumnType("date");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<VwCustomerAttributeEntity>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwCustomerAttribute");
+
+                entity.Property(e => e.AttributeType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AttributeValue)
+                    .IsRequired()
+                    .HasMaxLength(4000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BrandCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CustomerGlobalId)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerNumber)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerStatus)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.JoinDate).HasColumnType("date");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<VwCustomerDetailEntity>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwCustomerDetail");
+
+                entity.Property(e => e.AddressId).HasColumnName("AddressID");
+
+                entity.Property(e => e.AddressLine1)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine2)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine3)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.City)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CountryCode)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.County)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CustomerGlobalId)
+                    .IsRequired()
+                    .HasColumnName("CustomerGlobalID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.CustomerNumber)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerStatus)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerStatusId).HasColumnName("CustomerStatusID");
+
+                entity.Property(e => e.CustomerType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerTypeId).HasColumnName("CustomerTypeID");
+
+                entity.Property(e => e.EmailAddress)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EmailAddressId).HasColumnName("EmailAddressID");
+
+                entity.Property(e => e.EmailAddressType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExternalReferenceId)
+                    .HasColumnName("ExternalReferenceID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsOnDnclist).HasColumnName("IsOnDNCList");
+
+                entity.Property(e => e.JoinDate).HasColumnType("date");
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PersonGlobalId)
+                    .IsRequired()
+                    .HasColumnName("PersonGlobalID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PersonId).HasColumnName("PersonID");
+
+                entity.Property(e => e.PhoneNumber)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PhoneNumberId).HasColumnName("PhoneNumberID");
+
+                entity.Property(e => e.PhoneNumberNumeric)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PhoneNumberType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PostalCode)
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StateProv)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VwPersonEntity>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwPerson");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PersonGlobalId)
+                    .IsRequired()
+                    .HasColumnName("PersonGlobalID")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PersonId)
+                    .HasColumnName("PersonID")
+                    .ValueGeneratedOnAdd();
             });
 
             OnModelCreatingPartial(modelBuilder);

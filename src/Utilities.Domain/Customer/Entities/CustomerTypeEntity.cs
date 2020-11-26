@@ -1,19 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Utilities.Domain.Customer.Entities
 {
-    public partial class EmailAddressType
+    public partial class CustomerTypeEntity : Core.Framework.IAuditable
     {
-        public EmailAddressType()
+        public CustomerTypeEntity()
         {
-            EmailAddress = new HashSet<EmailAddress>();
+            Customers = new HashSet<CustomerEntity>();
         }
 
-        public int EmailAddressTypeId { get; set; }
+        public int CustomerTypeId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public string DisplayName { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
         public int? DisplayOrder { get; set; }
         public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
@@ -21,6 +22,6 @@ namespace Utilities.Domain.Customer.Entities
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual ICollection<EmailAddress> EmailAddress { get; set; }
+        public virtual ICollection<CustomerEntity> Customers { get; set; }
     }
 }

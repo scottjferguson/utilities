@@ -1,19 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Utilities.Domain.Customer.Entities
 {
-    public partial class PhoneNumberType
+    public partial class NoteTypeEntity : Core.Framework.IAuditable
     {
-        public PhoneNumberType()
+        public NoteTypeEntity()
         {
-            PhoneNumber = new HashSet<PhoneNumber>();
+            Notes = new HashSet<NoteEntity>();
         }
 
-        public int PhoneNumberTypeId { get; set; }
+        public int NoteTypeId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public string DisplayName { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
         public int? DisplayOrder { get; set; }
         public bool? IsActive { get; set; }
         public string CreatedBy { get; set; }
@@ -21,6 +22,6 @@ namespace Utilities.Domain.Customer.Entities
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual ICollection<PhoneNumber> PhoneNumber { get; set; }
+        public virtual ICollection<NoteEntity> Notes { get; set; }
     }
 }

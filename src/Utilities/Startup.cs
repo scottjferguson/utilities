@@ -1,5 +1,6 @@
 ﻿using Core.Plugins;
 using Core.Plugins.Configuration;
+using Core.Plugins.EntityFramework;
 using Core.Plugins.FileHandling;
 using ECommerce.Services;
 using ECommerce.Services.Impl;
@@ -32,6 +33,7 @@ namespace Utilities
             // Add Core Plugins
             services.AddApplicationServices(_pluginConfiguration);
             services.AddCorePlugins(_pluginConfiguration);
+            services.AddEntityFrameworkPlugin();
             services.AddFileHandlingPlugin();
 
             // Add other services needed to run the application

@@ -1,19 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Utilities.Domain.Customer.Entities
 {
-    public partial class PersonHistory
+    public partial class AttributeHistoryEntity : Core.Framework.IAuditable
     {
-        public long PersonHistoryId { get; set; }
+        public long AttributeHistoryId { get; set; }
         public string ChangeType { get; set; }
         public string HistoryCreatedBy { get; set; }
         public DateTime HistoryCreatedDate { get; set; }
-        public long PersonId { get; set; }
-        public string PersonGlobalId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public bool IsActive { get; set; }
+        public long AttributeId { get; set; }
+        public long CustomerId { get; set; }
+        public int AttributeTypeId { get; set; }
+        public string AttributeValue { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public string ModifiedBy { get; set; }

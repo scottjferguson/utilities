@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Utilities.Domain.Customer.Entities
 {
-    public partial class AddressType
+    public partial class EventTypeEntity : Core.Framework.IAuditable
     {
-        public AddressType()
+        public EventTypeEntity()
         {
-            Address = new HashSet<Address>();
+            Events = new HashSet<EventEntity>();
         }
 
-        public int AddressTypeId { get; set; }
+        public int EventTypeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayName { get; set; }
@@ -21,6 +21,6 @@ namespace Utilities.Domain.Customer.Entities
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual ICollection<Address> Address { get; set; }
+        public virtual ICollection<EventEntity> Events { get; set; }
     }
 }
