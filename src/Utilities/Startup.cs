@@ -1,74 +1,52 @@
-﻿using Core.Application;
-using Core.FileHandling;
-using Core.Plugins.Microsoft.Azure.Wrappers;
-using Core.Plugins.Utilities;
-using Core.Plugins.Utilities.FileHandling.Delimited;
-using Core.Plugins.Utilities.FileHandling.Excel;
-using Core.Providers;
+﻿using Core.Plugins;
+using Core.Plugins.Configuration;
+using Core.Plugins.FileHandling;
 using FluentCommander.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using Pluralize.NET.Core;
+using Processor;
 using Utilities.Common.Providers;
 using Utilities.Domain.Customer.Context;
 
 namespace Utilities
 {
-    public class Startup
+    public class Startup : IStartup
     {
-        private readonly IConfiguration _configuration;
+        private readonly PluginConfiguration _pluginConfiguration;
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _pluginConfiguration = BuildPluginConfiguration(configuration);
         }
 
-        public IServiceProvider ConfigureServices()
+        public void ConfigureServices(IServiceCollection services)
         {
-            // Initialize a ServiceCollection and add logging
-            var serviceCollection = new ServiceCollection()
-                .AddLogging(builder =>
-                {
-                    builder.SetMinimumLevel(LogLevel.Debug);
-                    builder.AddConsole();
-                });
+            // Add Entity Framework
+            services.AddDbContext<CustomerDbContext>();
 
             // Add the DatabaseCommander framework
-            serviceCollection.AddSqlServerDatabaseCommander(_configuration);
+            services.AddSqlServerDatabaseCommander(_pluginConfiguration.Configuration);
 
-            // Add Entity Framework
-            serviceCollection.AddDbContext<CustomerDbContext>();
-
-            // Add all Processors
-            AddProcessors(serviceCollection);
+            // Add Core Plugins
+            services.AddApplicationServices(_pluginConfiguration);
+            services.AddCorePlugins(_pluginConfiguration);
+            services.AddFileHandlingPlugin();
 
             // Add other services needed to run the application
-            serviceCollection.AddSingleton(_configuration);
-            serviceCollection.AddTransient<Pluralizer>();
-            serviceCollection.AddTransient<RandomNumberProvider>();
-            serviceCollection.AddTransient<RandomCodeProvider>();
-            serviceCollection.AddTransient<IDelimitedFileHandler, GenericParsingDelimitedFileHandler>();
-            serviceCollection.AddTransient<IExcelFileHandler, ClosedXmlExcelHandler>();
-            serviceCollection.AddTransient<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
-
-            // Build the IServiceProvider
-            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-
-            return serviceProvider;
+            services.AddTransient<Pluralizer>();
+            services.AddTransient<RandomNumberProvider>();
+            services.AddTransient<RandomCodeProvider>();
         }
 
-        private void AddProcessors(IServiceCollection serviceCollection)
+        private PluginConfiguration BuildPluginConfiguration(IConfiguration configuration)
         {
-            List<Type> processorTypes = new AssemblyScanner()
-                .GetApplicationTypesWithAttribute<ProcessorAttribute>();
-
-            foreach (Type processorType in processorTypes)
-            {
-                serviceCollection.AddTransient(processorType);
-            }
+            return new PluginConfigurationBuilder()
+                .UseConfiguration(configuration)
+                .UseApplicationName("Utilities")
+                .UseServiceLifetime(ServiceLifetime.Transient)
+                .UseGlobalUsername(configuration["GlobalUsername"])
+                .Build();
         }
     }
 }

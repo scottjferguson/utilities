@@ -1,7 +1,7 @@
-﻿using Core.Application;
-using Core.FileHandling;
+﻿using Core.FileHandling;
 using FluentCommander;
 using FluentCommander.StoredProcedure;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.Urjanet
 {
-    [Processor(Name = "LoadTestData")]
+    [Processor]
     public class LoadTestDataProcessor : FileProcessorBase, IProcessor
     {
         private readonly IDelimitedFileHandler _delimitedFileHandler;

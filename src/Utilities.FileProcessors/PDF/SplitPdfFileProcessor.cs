@@ -1,6 +1,6 @@
-﻿using Core.Application;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Processor;
 using System;
 using System.IO;
 using System.Threading;
@@ -9,7 +9,7 @@ using Utilities.Common;
 
 namespace Utilities.FileProcessors.PDF
 {
-    [Processor(Name = "SplitPdf")]
+    [Processor]
     public class SplitPdfFileProcessor : UtilitiesBase, IProcessor
     {
         private const string PdfFilePath = @"C:\Users\scott\Documents\PDFSplit\TaxAffidavit.pdf";

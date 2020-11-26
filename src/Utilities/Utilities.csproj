@@ -8,14 +8,16 @@
   <ItemGroup>
     <PackageReference Include="FluentCommander" Version="1.0.120" />
     <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.6" />
-    <PackageReference Include="Relay.Core" Version="1.0.108" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.123" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.8" />
+    <PackageReference Include="Relay.Core" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.225" />
+    <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.225" />
+    <PackageReference Include="Relay.Core.Plugins.FileHandling" Version="1.0.225" />
+    <PackageReference Include="Relay.Processor" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

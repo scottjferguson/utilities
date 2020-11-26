@@ -1,11 +1,12 @@
-﻿using Core.Application;
+﻿using Processor;
 using System;
+using System.Threading;
 
 namespace Utilities.Common
 {
     public class ProcessorOrchestrationBase : UtilitiesBase
     {
-        protected async void Execute<TProcessor>() where TProcessor : IProcessor, new()
+        protected async void Execute<TProcessor>(CancellationToken cancellationToken) where TProcessor : IProcessor, new()
         {
             Log($"Starting {typeof(TProcessor).Name}...");
 
@@ -13,7 +14,7 @@ namespace Utilities.Common
             {
                 var processor = new TProcessor();
 
-                await processor.ProcessAsync();
+                await processor.ProcessAsync(cancellationToken);
 
                 Log("Complete");
             }

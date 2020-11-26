@@ -1,8 +1,8 @@
-﻿using Core.Application;
-using Core.FileHandling;
-using Core.Plugins.Utilities;
+﻿using Core.FileHandling;
+using Extensions;
 using FluentCommander;
 using FluentCommander.SqlNonQuery;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ using Utilities.Common;
 
 namespace Utilities.FileProcessors.XVerify
 {
-    [Processor(Name = "XVerifyMailingAddressByServiceAddressValidFile")]
+    [Processor]
     public class XVerifyMailingAddressByServiceAddressValidFileProcessor : UtilitiesBase, IProcessor
     {
         private readonly IDatabaseCommander _databaseCommander;
@@ -36,16 +36,16 @@ namespace Utilities.FileProcessors.XVerify
 
             foreach (DataRow dataRow in dataTable.Rows)
             {
-                string inputAddress = GlobalHelper.GetStringOrNull(dataRow["Address"]);
-                string inputCity = GlobalHelper.GetStringOrNull(dataRow["City"]);
-                string inputState = GlobalHelper.GetStringOrNull(dataRow["State"]);
-                string inputZip = GlobalHelper.GetStringOrNull(dataRow["Zip"]);
+                string inputAddress = dataRow.GetStringOrNull("Address");
+                string inputCity = dataRow.GetStringOrNull("City");
+                string inputState = dataRow.GetStringOrNull("State");
+                string inputZip = dataRow.GetStringOrNull("Zip");
 
-                string validatedAddress = GlobalHelper.GetStringOrNull(dataRow["xv_address1"]);
-                string validatedCity = GlobalHelper.GetStringOrNull(dataRow["xv_city"]);
-                string validatedState = GlobalHelper.GetStringOrNull(dataRow["xv_state"]);
-                string validatedZip = GlobalHelper.GetStringOrNull(dataRow["xv_zip"]);
-                string validatedZipLastFour = GlobalHelper.GetStringOrNull(dataRow["plus4"]);
+                string validatedAddress = dataRow.GetStringOrNull("xv_address1");
+                string validatedCity = dataRow.GetStringOrNull("xv_city");
+                string validatedState = dataRow.GetStringOrNull("xv_state");
+                string validatedZip = dataRow.GetStringOrNull("xv_zip");
+                string validatedZipLastFour = dataRow.GetStringOrNull("plus4");
 
                 if (!string.IsNullOrEmpty(validatedZip) && !string.IsNullOrEmpty(validatedZipLastFour))
                 {

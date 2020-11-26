@@ -1,6 +1,6 @@
-﻿using Core.Application;
-using Core.Plugins.Utilities;
+﻿using Extensions;
 using FluentCommander;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +11,7 @@ using Utilities.Common;
 
 namespace Utilities.DatabaseProcessors.DatabaseTableProcessor
 {
-    [Processor(Name = "NullColumnDatabaseTable")]
+    [Processor]
     public class NullColumnDatabaseTableProcessor : ProcessorBase
     {
         private readonly IDatabaseCommander _databaseCommander;
@@ -60,8 +60,8 @@ ORDER BY 1, 2, 3";
                 .ExecuteSqlAsync(string.Format(sql, _schemaName, _tableName), cancellationToken);
 
             return dataTable.AsEnumerable()
-                .Where(dr => GlobalHelper.GetSafeBoolean(dr["ObjectNullable"]))
-                .Select(dr => GlobalHelper.GetSafeString(dr["ObjectName"]))
+                .Where(dr => dr.GetSafeBoolean("ObjectNullable"))
+                .Select(dr => dr.GetSafeString("ObjectName"))
                 .ToList();
         }
 

@@ -7,9 +7,11 @@
   <ItemGroup>
     <PackageReference Include="FluentCommander" Version="1.0.120" />
     <PackageReference Include="FluentCommander.SqlServer" Version="1.0.120" />
-    <PackageReference Include="Relay.Core" Version="1.0.108" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.123" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.123" />
+    <PackageReference Include="Relay.Core" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.225" />
+    <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.225" />
+    <PackageReference Include="Relay.Extensions" Version="1.0.5" />
+    <PackageReference Include="Relay.Processor" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

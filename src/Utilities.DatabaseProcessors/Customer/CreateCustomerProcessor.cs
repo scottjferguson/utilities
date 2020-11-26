@@ -1,8 +1,8 @@
-﻿using Core.Application;
-using Core.Plugins.Extensions;
+﻿using Processor;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Extensions;
 using Utilities.Common;
 using Utilities.Common.Models;
 using Utilities.Common.Providers;
@@ -11,7 +11,7 @@ using Utilities.Domain.Customer.Entities;
 
 namespace Utilities.DatabaseProcessors.Customer
 {
-    [Processor(Name = "CreateCustomer")]
+    [Processor]
     public class CreateCustomerProcessor : ProcessorBase
     {
         private readonly CustomerDbContext _dbContext;

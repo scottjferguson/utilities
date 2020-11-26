@@ -1,4 +1,5 @@
-﻿using FluentCommander;
+﻿using Extensions;
+using FluentCommander;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,7 +78,7 @@ namespace Utilities.FileProcessors.Base
         {
             foreach (DataColumn dataColumn in dataTable.Columns)
             {
-                dataColumn.ColumnName = Core.Plugins.Extensions.StringExtensions.Remove(dataColumn.ColumnName, " ");
+                dataColumn.ColumnName = dataColumn.ColumnName.Without(" ");
 
                 if (DatabaseColumns.ContainsKey(dataColumn.ColumnName))
                     continue;

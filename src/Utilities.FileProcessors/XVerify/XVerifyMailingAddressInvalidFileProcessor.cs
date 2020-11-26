@@ -1,8 +1,8 @@
-﻿using Core.Application;
-using Core.FileHandling;
-using Core.Plugins.Utilities;
+﻿using Core.FileHandling;
+using Extensions;
 using FluentCommander;
 using FluentCommander.SqlNonQuery;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ using Utilities.Common;
 
 namespace Utilities.FileProcessors.XVerify
 {
-    [Processor(Name = "XVerifyMailingAddressInvalidFile")]
+    [Processor]
     public class XVerifyMailingAddressInvalidFileProcessor : UtilitiesBase, IProcessor
     {
         private readonly IDatabaseCommander _databaseCommander;
@@ -36,10 +36,10 @@ namespace Utilities.FileProcessors.XVerify
 
             foreach (DataRow dataRow in dataTable.Rows)
             {
-                string inputAddress = GlobalHelper.GetStringOrNull(dataRow["Address"]);
-                string inputCity = GlobalHelper.GetStringOrNull(dataRow["City"]);
-                string inputState = GlobalHelper.GetStringOrNull(dataRow["State"]);
-                string inputZip = GlobalHelper.GetStringOrNull(dataRow["Zip"]);
+                string inputAddress = dataRow.GetStringOrNull("Address");
+                string inputCity = dataRow.GetStringOrNull("City");
+                string inputState = dataRow.GetStringOrNull("State");
+                string inputZip = dataRow.GetStringOrNull("Zip");
 
                 if (inputAddress.Split(',').Count() > 2)
                 {

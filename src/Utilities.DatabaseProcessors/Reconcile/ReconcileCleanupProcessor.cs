@@ -1,6 +1,6 @@
-﻿using Core.Application;
-using Core.Plugins.Utilities;
+﻿using Extensions;
 using FluentCommander;
+using Processor;
 using System;
 using System.Data;
 using System.Threading;
@@ -9,7 +9,7 @@ using Utilities.Common;
 
 namespace Utilities.DatabaseProcessors.Reconcile
 {
-    [Processor(Name = "ReconcileCleanup")]
+    [Processor]
     public class ReconcileCleanupProcessor : ProcessorBase
     {
         private readonly IDatabaseCommander _commander;
@@ -37,14 +37,14 @@ namespace Utilities.DatabaseProcessors.Reconcile
 
             foreach (DataRow dataRow in dataTable.Rows)
             {
-                string sourceLink = GlobalHelper.GetSafeString(dataRow["SourceLink"]);
-                int count = GlobalHelper.GetSafeInt32(dataRow["Count"]);
+                string sourceLink = dataRow.GetSafeString("SourceLink");
+                int count = dataRow.GetSafeInt32("Count");
 
                 DataTable statementIds = await _commander.ExecuteSqlAsync($"SELECT TOP {count - 1} [StatementId] FROM [dbo].[Statement] (NOLOCK) WHERE [SourceLink] = '{sourceLink}' AND [IsLatest] = 0 ORDER BY [StatementId] DESC", cancellationToken);
 
                 foreach (DataRow statementRow in statementIds.Rows)
                 {
-                    long statementId = GlobalHelper.GetSafeInt64(statementRow["StatementId"]);
+                    long statementId = statementRow.GetSafeInt64("StatementId");
 
                     await _commander.ExecuteNonQueryAsync($"DELETE FROM [dbo].[Statement] WHERE [StatementId] = {statementId}", cancellationToken);
                 }
@@ -62,17 +62,17 @@ namespace Utilities.DatabaseProcessors.Reconcile
 
             foreach (DataRow dataRow in dataTable.Rows)
             {
-                long accountId = GlobalHelper.GetSafeInt64(dataRow["AccountId"]);
-                long timelineEventTypeId = GlobalHelper.GetSafeInt64(dataRow["TimelineEventTypeId"]);
-                DateTime eventDate = GlobalHelper.GetSafeDateTime(dataRow["EventDate"]);
-                string billerCode = GlobalHelper.GetSafeString(dataRow["BillerCode"]);
-                int count = GlobalHelper.GetSafeInt32(dataRow["Count"]);
+                long accountId = dataRow.GetSafeInt64("AccountId");
+                long timelineEventTypeId = dataRow.GetSafeInt64("TimelineEventTypeId");
+                DateTime eventDate = dataRow.GetSafeDateTime("EventDate");
+                string billerCode = dataRow.GetSafeString("BillerCode");
+                int count = dataRow.GetSafeInt32("Count");
 
                 DataTable timelineEvents = await _commander.ExecuteSqlAsync($"SELECT TOP {count - 1} [TimelineEventId] FROM [dbo].[TimelineEvent] t (NOLOCK) INNER JOIN [Account] (NOLOCK) a on t.[AccountId] = a.[AccountId] WHERE t.[AccountId] = {accountId} AND [TimelineEventTypeId] = {timelineEventTypeId} AND CONVERT(DATE, [EventDate]) = '{eventDate.ToShortDateString()}' AND [BillerCode] = '{billerCode}' ORDER BY [TimelineEventId] DESC", cancellationToken);
 
                 foreach (DataRow timelineEventRow in timelineEvents.Rows)
                 {
-                    long timelineEventId = GlobalHelper.GetSafeInt64(timelineEventRow["TimelineEventId"]);
+                    long timelineEventId = timelineEventRow.GetSafeInt64("TimelineEventId");
 
                     await _commander.ExecuteNonQueryAsync($"DELETE FROM [dbo].[TimelineEvent] WHERE [TimelineEventId] = {timelineEventId}", cancellationToken);
                 }

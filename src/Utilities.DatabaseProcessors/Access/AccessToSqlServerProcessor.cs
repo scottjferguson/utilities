@@ -1,5 +1,7 @@
-﻿using Core.Application;
+﻿using Core.Providers;
+using Extensions;
 using FluentCommander;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,12 +9,11 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Providers;
 using Utilities.Common;
 
 namespace Utilities.DatabaseProcessors.Access
 {
-    [Processor(Name = "AccessToSqlServer")]
+    [Processor]
     public class AccessToSqlServerProcessor : UtilitiesBase, IProcessor
     {
         private readonly IDatabaseCommander _databaseCommander;
@@ -126,7 +127,7 @@ namespace Utilities.DatabaseProcessors.Access
         {
             foreach (DataColumn dataColumn in dataTable.Columns)
             {
-                dataColumn.ColumnName = Core.Plugins.Extensions.StringExtensions.Remove(dataColumn.ColumnName, " ");
+                dataColumn.ColumnName = dataColumn.ColumnName.Without(" ");
 
                 if (_databaseColumns.ContainsKey(dataColumn.ColumnName))
                     continue;

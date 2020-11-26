@@ -1,5 +1,5 @@
-﻿using Core.Application;
-using Pluralize.NET.Core;
+﻿using Pluralize.NET.Core;
+using Processor;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.CSharp
 {
-    [Processor(Name = "Entity")]
+    [Processor]
     public class EntityFileProcessor : FileProcessorBase, IProcessor
     {
         // Settings:

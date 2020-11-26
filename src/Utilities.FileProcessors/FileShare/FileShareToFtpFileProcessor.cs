@@ -1,8 +1,8 @@
 ﻿using Azure.Storage.Files.Shares;
 using Azure.Storage.Files.Shares.Models;
-using Core.Application;
-using Core.FileHandling;
+using Core.Plugins.Ftp;
 using FluentFTP;
+using Processor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +14,7 @@ using Utilities.FileProcessors.Base;
 
 namespace Utilities.FileProcessors.FileShare
 {
-    [Processor(Name = "FileShareToFtp")]
+    [Processor]
     public class FileShareToFtpFileProcessor : FileProcessorBase, IProcessor
     {
         private readonly List<string> _errors = new List<string>();
